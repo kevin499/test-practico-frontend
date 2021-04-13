@@ -1,0 +1,24 @@
+.resultado-busqueda{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgb(238, 238 ,238);
+    min-height: calc(100vh - 50px);
+
+
+    .breadcrumb{
+        width: 77%;
+        color: gray;
+        font-size: .9em;
+    }
+
+    .resultados{
+        width: 75%;
+        background: white;
+        margin-bottom: 100px;
+        padding: 0 15px ;
+        border-radius: 2px;
+    }
+
+}

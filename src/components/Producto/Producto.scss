@@ -1,0 +1,79 @@
+.producto-card{
+    padding: 10px 0;
+    display: flex;
+    border-bottom: 1px solid #EBECEE;
+    color: black;
+    text-decoration: none;
+
+    .imagen{
+        width: 180px;
+
+        img{
+            width: 100%;
+            border-radius: 4px;
+            aspect-ratio: 1 / 1;
+        }
+    }
+
+    .contenido{
+        width: calc(80% - 200px);
+        padding: 0 15px;
+        box-sizing: border-box;
+
+        .precio{
+            display: inline-block;
+            min-width: 150px;
+            min-height: 30px;
+            font-size: 1.5em;
+            margin-bottom: 0px;
+        }
+
+        .titulo{
+            width: 70%;
+            height: 100px;
+            font-size: 1.1em;
+            margin-top: 10px;
+
+        }
+    }
+
+    .lugar{
+        width: calc(20%);
+        text-align: center;
+        padding-top: 30px;
+        font-size: 0.7em;
+        color: gray;
+
+        p{
+            min-height: 20px;
+        }
+    }
+}
+
+.loading{
+    position: relative;
+    background-color: #EEEEEE;
+    overflow: hidden;
+
+}
+
+.loading::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: -150px;
+    top: 0;
+    height: 100%;
+    width: 150px;
+    background: linear-gradient(to right, transparent 0%, #E8E8E8 50%, transparent 100%);
+    animation: load 1s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+}
+
+@keyframes load {
+    from {
+        left: -150px;
+    }
+    to   {
+        left: 100%;
+    }
+}
