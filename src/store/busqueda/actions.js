@@ -11,9 +11,16 @@ export const addResults = (results) => {
     }
 }
 
-export const dataLoading = () => {
+export const dataLoadingSearch = (loading) => {
     return {
-        type: "DATA_LOADING"
+        type: "DATA_LOADING_SEARCH",
+        payload: loading
+    }
+}
+export const dataLoadingItem = (loading) => {
+    return {
+        type: "DATA_LOADING_ITEM",
+        payload: loading
     }
 }
 
@@ -42,12 +49,15 @@ export const addItem = (item) => {
 export const changeResults = (query) => {
     return (dispatch, getState) => {
 
-        dispatch(dataLoading())
+        dispatch(dataLoadingSearch(true))
 
         return axios.get(`http://localhost:8080/api/items?q=${query}`)
             .then(res => res.data)
             .then(res => {
                 dispatch(addResults(res))
+            })
+            .catch(e => {
+               dispatch(dataLoadingSearch(false))
             })
     }
 }
@@ -56,7 +66,7 @@ export const changeResults = (query) => {
 export const changeItem = (id) => {
     return (dispatch, getState) => {
 
-        dispatch(dataLoading())
+        dispatch(dataLoadingItem(true))
 
         return axios.get(`http://localhost:8080/api/items/${id}`)
             .then(res => res.data)

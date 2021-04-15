@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const axios = require('axios')
-const { response } = require('express')
 
 const app = express()
 
@@ -11,19 +10,32 @@ app.use(cors())
 
 app.get('/api/items', async (req, res) => {
 
-    const resultado = await axios.get(`https://api.mercadolibre.com/sites/MLA/search?q=${req.query.q}&limit=4`)
+    const searchProducts = req.query.q
 
-    let categories = resultado.data.filters.find(filtro => filtro.id == 'category')?.values[0].path_from_root
+    const { data: data_search } = await axios.get(`https://api.mercadolibre.com/sites/MLA/search`, {
+        params: {
+            q: searchProducts,
+            limit: 4
+        }
+    })
+
+    if (!data_search.results.length) {
+        return res.status(404).json({
+            error: "No hay publicaciones que coincidan con tu búsqueda."
+        })
+    }
+
+    let categories = data_search.filters.find(filter => filter.id == 'category')?.values[0].path_from_root
 
     if (!categories) {
 
-        let categoria_id = resultado.data.available_filters
-            .find(filtro => filtro.id == 'category').values
+        let category_id = data_search.available_filters
+            .find(filter => filter.id == 'category').values
             .sort((a, b) => b.results - a.results)[0].id
 
-        const resultado_2 = await axios.get(`https://api.mercadolibre.com/categories/${categoria_id}`)
+        const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${category_id}`)
 
-        categories = resultado_2.data.path_from_root
+        categories = data_category.path_from_root
     }
 
     categories = categories.map(c => c.name)
@@ -35,18 +47,20 @@ app.get('/api/items', async (req, res) => {
         },
         categories: categories,
         items: [
-            ...resultado.data.results.map(item => {
+            ...data_search.results.map(item => {
+                const { id, title, currency_id, price, thumbnail, condition, shipping: { free_shipping }, address: { state_name } } = item
                 return {
-                    id: item.id,
-                    title: item.title,
+                    id: id,
+                    title: title,
                     price: {
-                        currency: item.currency_id,
-                        amount: parseInt(item.price.toString().split('.')[0]),
-                        decimals: parseInt(item.price.toString().split('.')[1] ?? 0)
+                        currency: currency_id,
+                        amount: parseInt(price.toString().split('.')[0]),
+                        decimals: parseInt(price.toString().split('.')[1] ?? 0)
                     },
-                    picture: item.thumbnail,
-                    condition: item.condition,
-                    free_shipping: item.shipping.free_shipping
+                    picture: thumbnail,
+                    condition: condition,
+                    free_shipping: free_shipping,
+                    state_name: state_name
                 }
             }),
         ]
@@ -57,10 +71,10 @@ app.get('/api/items', async (req, res) => {
 
 app.get('/api/items/:id', async (req, res) => {
 
-    const item = await axios.get(`https://api.mercadolibre.com/items/${req.params.id}`).then(res => res.data)
-
-    const description = await axios.get(`https://api.mercadolibre.com/items/${req.params.id}/description`).then(res => res.data)
-
+    const [item, description] = await Promise.all([
+        axios.get(`https://api.mercadolibre.com/items/${req.params.id}`).then(res => res.data),
+        axios.get(`https://api.mercadolibre.com/items/${req.params.id}/description`).then(res => res.data)
+    ]).catch(err => console.log(err))
 
     switch (item.condition) {
         case 'new':
@@ -74,32 +88,39 @@ app.get('/api/items/:id', async (req, res) => {
             break;
     }
 
+    const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${item.category_id}`)
+
+    categories = data_category.path_from_root
+
+    categories = categories.map(c => c.name)
+
+
+    const { id, title, currency_id, price, pictures, condition, shipping: { free_shipping }, sold_quantity } = item
+
     const resultado = {
         author: {
             name: 'Kevin',
             lastname: 'Palacios'
         },
         item: {
-            id: item.id,
-            title: item.title,
+            id: id,
+            title: title,
             price: {
-                currency: item.currency_id,
-                amount: parseInt(item.price.toString().split('.')[0]),
-                decimals: parseInt(item.price.toString().split('.')[1] ?? 0)
+                currency: currency_id,
+                amount: parseInt(price.toString().split('.')[0]),
+                decimals: parseInt(price.toString().split('.')[1] ?? 0)
             },
-            picture: item.thumbnail,
-            condition: item.condition,
-            free_shipping: item.shipping.free_shipping,
-            sold_quantity: item.sold_quantity,
-            description: description.plain_text
+            picture: pictures[0].url,
+            condition: condition,
+            free_shipping: free_shipping,
+            sold_quantity: sold_quantity,
+            description: description.plain_text,
+            categories: categories
 
         }
     }
 
-
     res.status(200).json(resultado)
-
-
 
 })
 

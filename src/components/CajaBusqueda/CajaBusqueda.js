@@ -19,10 +19,10 @@ const CajaBusqueda = (props) => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        // console.log(`BUSCAR : ${search}`)
+
         const nueva_busqueda = e.target.busqueda.value
 
-        if(search != nueva_busqueda){
+        if(search !== nueva_busqueda){
             dispatch(changeResults(nueva_busqueda))
             setSearch(nueva_busqueda)
         }

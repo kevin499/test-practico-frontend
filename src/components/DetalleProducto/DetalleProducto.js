@@ -9,7 +9,7 @@ const DetalleProducto = () => {
 
     let { id } = useParams()
 
-    const producto = useSelector(state => state.items.find(item => item.id == id))
+    const producto = useSelector(state => state.items.find(item => item.id === id))
 
     const data_loading = useSelector(state => state.data_loading)
 
@@ -27,10 +27,11 @@ const DetalleProducto = () => {
 
     return (
         <section className='detalle-producto'>
-            <p className="breadcrumb"></p>
+            <p className="breadcrumb"> { producto?.categories?.join(" > ") } </p>
+
             <article>
                 <div className="contenido">
-                    <figure className={data_loading && !producto?.picture ? 'loading' : ''}>
+                    <figure >
 
                         {
                             producto ? (
@@ -47,14 +48,18 @@ const DetalleProducto = () => {
                     </div>
                 </div>
                 <div className="contenido-derecha">
-                    <p className={data_loading && !producto?.condition ? 'loading' : ''}>
-                        { producto?.condition} - {producto?.sold_quantity } vendidos
+                    <p>
+                        {
+                            !data_loading && producto?.condition ? (
+                                <span>{ producto?.condition} - {producto?.sold_quantity } vendidos</span>
+                            ) : ''
+                        }
                     </p>
                     <h1 className={data_loading && !producto?.title ? 'loading' : ''}>
                         { producto?.title }
                     </h1>
                     <p className={`precio ${data_loading && !producto?.price ? 'loading' : ''}`}>
-                        {producto?.price?.currency == 'ARS' ? '$ ' : ''}
+                        {producto?.price?.currency === 'ARS' ? '$ ' : ''}
                         <span>
                             { numberWithCommas(producto?.price?.amount) }
                         </span>

@@ -6,12 +6,13 @@
     text-decoration: none;
 
     .imagen{
-        width: 180px;
+        width: 160px;
 
         img{
             width: 100%;
             border-radius: 4px;
             aspect-ratio: 1 / 1;
+            object-fit: contain;
         }
     }
 
@@ -26,6 +27,17 @@
             min-height: 30px;
             font-size: 1.5em;
             margin-bottom: 0px;
+            margin-top: 1.2em;
+            display: flex;
+            align-items: center;
+        }
+
+        .free-shipping{
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: rgb(20,158,78);
+            margin: 0 10px;
         }
 
         .titulo{
@@ -48,6 +60,9 @@
             min-height: 20px;
         }
     }
+}
+.no-pointer{
+    cursor: default;
 }
 
 .loading{
