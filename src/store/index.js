@@ -1,12 +1,14 @@
-import { createStore, applyMiddleware } from 'redux'
-import busqueda from './busqueda/reducer'
+import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk';
+import busquedaReducer from './busqueda/reducer'
+import uiReducer from './ui/reducer'
 
-// const store = createStore(busqueda)
-const store = createStore(busqueda, applyMiddleware(thunk));
-// const store = createStore(
-//     busqueda, /* preloadedState, */
-//    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-//   );
+const reducer = combineReducers({
+    busqueda: busquedaReducer, 
+    ui: uiReducer
+})
+
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
+let store = createStoreWithMiddleware(reducer);
 
 export default store

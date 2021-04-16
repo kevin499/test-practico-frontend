@@ -14,11 +14,17 @@
     }
 
     .resultados{
-        width: 75%;
+        width: 100%;
         background: white;
         margin-bottom: 100px;
         padding: 0 15px ;
         border-radius: 2px;
+        @media screen and (min-width: '1024px') {
+          width: 75%;
+        }
+        .no-items{
+            padding: 5px 15px;
+        }
     }
 
 }

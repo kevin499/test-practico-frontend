@@ -9,7 +9,7 @@ import { useHistory, Link } from 'react-router-dom'
 import { changeResults } from '../../store/busqueda/actions'
 
 
-const CajaBusqueda = (props) => {
+const CajaBusqueda = () => {
 
     const history = useHistory()
 
@@ -20,28 +20,27 @@ const CajaBusqueda = (props) => {
     const handleSearch = (e) => {
         e.preventDefault();
 
-        const nueva_busqueda = e.target.busqueda.value
+        const new_search = e.target.search.value
 
-        if(search !== nueva_busqueda){
-            dispatch(changeResults(nueva_busqueda))
-            setSearch(nueva_busqueda)
+        if (search !== new_search) {
+            dispatch(changeResults(new_search))
+            setSearch(new_search)
         }
 
-        history.push(`/items?search=${ nueva_busqueda }`)
-
+        history.push(`/items?search=${new_search}`)
     }
 
     return (
-        <div className='caja-busqueda'>
+        <header className='caja-busqueda'>
+            
             <Link to="/"><img className="logo" src={logo} alt="Mercado libre"></img></Link>
 
             <form onSubmit={handleSearch}>
-                <input type="text" name="busqueda" placeholder="Nunca dejes de buscar" />
+                <input type="text" name="search" placeholder="Nunca dejes de buscar" />
                 <button><img src={lupa} alt="Buscar"></img></button>
             </form>
-        </div>
+        </header>
     )
-
 }
 
 export default CajaBusqueda

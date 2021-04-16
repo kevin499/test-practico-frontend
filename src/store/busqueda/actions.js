@@ -1,26 +1,13 @@
 import axios from 'axios'
+import { itemsSearchLoading, itemLoading} from '../ui/actions'
 
 
 export const addResults = (results) => {
     return {
         type: "ADD_RESULTS",
         payload: {
-            ...results,
-            data_loading: false
+            ...results
         }
-    }
-}
-
-export const dataLoadingSearch = (loading) => {
-    return {
-        type: "DATA_LOADING_SEARCH",
-        payload: loading
-    }
-}
-export const dataLoadingItem = (loading) => {
-    return {
-        type: "DATA_LOADING_ITEM",
-        payload: loading
     }
 }
 
@@ -28,8 +15,7 @@ export const completeItem = (item) => {
     return {
         type: "COMPLETE_ITEM",
         payload: {
-            item,
-            data_loading: false
+            item
         }
     }
 }
@@ -38,8 +24,7 @@ export const addItem = (item) => {
     return {
         type: "ADD_ITEM",
         payload: {
-            item,
-            data_loading: false
+            item
         }
     }
 }
@@ -49,7 +34,7 @@ export const addItem = (item) => {
 export const changeResults = (query) => {
     return (dispatch, getState) => {
 
-        dispatch(dataLoadingSearch(true))
+        dispatch(itemsSearchLoading(true))
 
         return axios.get(`http://localhost:8080/api/items?q=${query}`)
             .then(res => res.data)
@@ -57,8 +42,12 @@ export const changeResults = (query) => {
                 dispatch(addResults(res))
             })
             .catch(e => {
-               dispatch(dataLoadingSearch(false))
+                console.log(e)
             })
+            .finally( _ => {
+                dispatch(itemsSearchLoading(false))
+            })
+
     }
 }
 
@@ -66,19 +55,20 @@ export const changeResults = (query) => {
 export const changeItem = (id) => {
     return (dispatch, getState) => {
 
-        dispatch(dataLoadingItem(true))
+        dispatch(itemLoading(true))
 
         return axios.get(`http://localhost:8080/api/items/${id}`)
             .then(res => res.data)
             .then(res => {
-                if(getState().items.length > 0){
+                if (getState().busqueda.items.length > 0) {
                     dispatch(completeItem(res.item))
                 }
-                else{
+                else {
                     dispatch(addItem(res.item))
                 }
 
                 return res.item
             })
+        .finally( _ =>  dispatch(itemLoading(false))) 
     }
 }

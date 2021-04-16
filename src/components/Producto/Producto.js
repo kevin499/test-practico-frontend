@@ -2,24 +2,13 @@ import React from 'react'
 
 import './Producto.scss'
 
-import { useHistory, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+
+import { numberWithCommas } from '../../helpers'
 
 const Producto = ({ producto }) => {
-
-    const history = useHistory()
-
-    // const handleClick = (product_id) => {
-    //     console.log("click")
-    //     if (product_id) history.push(`/items/${product_id}`)
-
-    // }
-
-    const numberWithCommas = (x) => {
-        if (x) return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
     return (
-        <Link to={`${!producto ?  '#' : `/items/${producto?.id}` }`} className={`producto-card ${!producto ? 'no-pointer' : ''}`}>
+        <Link to={!producto ?  '#' : `/items/${producto?.id}`} className={`producto-card ${!producto ? 'no-pointer' : ''}`}>
                 <div className={`imagen ${!producto ? 'loading' : ''}`}>
                     {
                         producto ? (

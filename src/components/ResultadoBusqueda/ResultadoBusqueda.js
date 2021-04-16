@@ -1,53 +1,44 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-// import { useParams } from 'react-router-dom'
-
 
 import './ResultadoBusqueda.scss'
 import Producto from '../Producto/Producto'
 
-
-
 const ResultadoBusqueda = () => {
 
-    // const dispatch = useDispatch()
-
-    const busqueda = useSelector(state => state)
-
-    // const { search } = useParams()
+    const { busqueda: {items, categories}, ui: {items_search_loading} } = useSelector(state => state)
 
     return (
-        <section className='resultado-busqueda'>
-            <p className="breadcrumb"> { busqueda.categories?.join(" > ") } </p>
-            <div className="resultados">
+        <main className='resultado-busqueda'>
+            <p className="breadcrumb"> {categories.join(" > ")} </p>
+            <section className="resultados">
                 {
-                    !busqueda.data_loading ?
-                        busqueda.items?.map(producto => (
+                    !items_search_loading ?
+                        items?.map(producto => (
                             <Producto key={producto.id} producto={producto}></Producto>
                         ))
                         : ''
                 }
 
                 {
-
-                    busqueda.items.length === 0 && !busqueda.data_loading ? 
-                    <p>No hay publicaciones que coincidan con tu búsqueda.</p> 
-                    : ''
-
+                    !items_search_loading && !items.length ?
+                        <p className="no-items">No hay publicaciones que coincidan con tu búsqueda.</p>
+                        : ''
                 }
 
                 {
-                    busqueda.data_loading ? (
+                    items_search_loading ? (
                         <>
                             <Producto></Producto>
                             <Producto></Producto>
                             <Producto></Producto>
                         </>
 
-                    ) : ""}
+                    ) : ""
+                }
 
-            </div>
-        </section>
+            </section>
+        </main>
     )
 
 }

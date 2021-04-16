@@ -9,13 +9,12 @@
 
     .logo{
         width: 50px;
-        // padding: 0 20px;
     }
     form{
         width: 70%;
         height: 35px;
-        margin-left: 50px;
-
+        // margin-left: 50px;
+        margin-left: 5%;
         input{
             width: calc(100% - 35px);
             height: 100%;
@@ -29,7 +28,7 @@
             height: 100%;
             background: rgb(235, 236, 238);
             border: none;
-
+            cursor: pointer;
 
             img{
                 width: 15px;
