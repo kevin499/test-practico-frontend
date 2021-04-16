@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import './DetalleProducto.scss'
 
-import { changeItem } from '../../store/busqueda/actions'
+import { searchItem } from '../../store/busqueda/actions'
 import { seo, numberWithCommas } from '../../helpers'
 
 
@@ -19,11 +19,9 @@ const DetalleProducto = () => {
 
     useEffect(() => {
         if (!producto?.description) {
-            dispatch(changeItem(id))
+            dispatch(searchItem(id))
         }
-        return () => {
-            seo()
-        }
+        return () => seo()
     }, [])
 
     useEffect(() => {
@@ -36,9 +34,14 @@ const DetalleProducto = () => {
     return (
         <section className='detalle-producto'>
             <p className="breadcrumb"> {producto?.categories?.join(" > ")} </p>
-
+            {
+                <div className="contenido">
+                    <p className="no-items">Parece que el producto que buscás no existe más</p>
+                </div>
+            }
             <article className="contenido wrapper">
-                <figure class="one">
+
+                <figure className="one">
 
                     {
                         producto ? (
@@ -47,7 +50,7 @@ const DetalleProducto = () => {
                     }
 
                 </figure>
-                <div class="two  contenido-derecha">
+                <div className="two  contenido-derecha">
                     <p>
                         {
                             !item_loading && producto?.condition ? (

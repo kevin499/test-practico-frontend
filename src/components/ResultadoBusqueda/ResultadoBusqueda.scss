@@ -1,30 +1,28 @@
-.resultado-busqueda{
+.resultado-busqueda {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: rgb(238, 238 ,238);
+    background: rgb(238, 238, 238);
     min-height: calc(100vh - 50px);
 
-
-    .breadcrumb{
+    .breadcrumb {
         width: 77%;
         color: gray;
-        font-size: .9em;
+        font-size: 0.9em;
     }
 
-    .resultados{
+    .resultados {
         width: 100%;
         background: white;
         margin-bottom: 100px;
-        padding: 0 15px ;
         border-radius: 2px;
-        @media screen and (min-width: '1024px') {
-          width: 75%;
+        @media screen and (min-width: "1024px") {
+            width: 75%;
+            padding: 0 15px;
         }
-        .no-items{
+        .no-items {
             padding: 5px 15px;
         }
     }
-
 }

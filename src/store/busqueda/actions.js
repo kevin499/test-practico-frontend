@@ -1,19 +1,19 @@
 import axios from 'axios'
-import { itemsSearchLoading, itemLoading} from '../ui/actions'
+import { itemsSearchLoading, itemLoading } from '../ui/actions'
 
 
-export const addResults = (results) => {
+export const addResultsSearch = (results) => {
     return {
-        type: "ADD_RESULTS",
+        type: "ADD_RESULTS_SEARCH",
         payload: {
             ...results
         }
     }
 }
 
-export const completeItem = (item) => {
+export const updateItem = (item) => {
     return {
-        type: "COMPLETE_ITEM",
+        type: "UPDATE_ITEM",
         payload: {
             item
         }
@@ -31,28 +31,22 @@ export const addItem = (item) => {
 
 
 
-export const changeResults = (query) => {
-    return (dispatch, getState) => {
+export const searchResults = (query) => {
+    return (dispatch) => {
 
         dispatch(itemsSearchLoading(true))
 
         return axios.get(`http://localhost:8080/api/items?q=${query}`)
             .then(res => res.data)
-            .then(res => {
-                dispatch(addResults(res))
-            })
-            .catch(e => {
-                console.log(e)
-            })
-            .finally( _ => {
-                dispatch(itemsSearchLoading(false))
-            })
+            .then(res => dispatch(addResultsSearch(res)))
+            .catch(e => console.log(e))
+            .then(_ => dispatch(itemsSearchLoading(false)))
 
     }
 }
 
 
-export const changeItem = (id) => {
+export const searchItem = (id) => {
     return (dispatch, getState) => {
 
         dispatch(itemLoading(true))
@@ -61,14 +55,11 @@ export const changeItem = (id) => {
             .then(res => res.data)
             .then(res => {
                 if (getState().busqueda.items.length > 0) {
-                    dispatch(completeItem(res.item))
+                    return dispatch(updateItem(res.item))
                 }
-                else {
-                    dispatch(addItem(res.item))
-                }
-
-                return res.item
+                return dispatch(addItem(res.item))
             })
-        .finally( _ =>  dispatch(itemLoading(false))) 
+            .catch(e => console.log(e))
+            .then(_ => dispatch(itemLoading(false)))
     }
 }

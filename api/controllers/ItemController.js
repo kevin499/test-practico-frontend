@@ -16,20 +16,7 @@ exports.index = async (req, res) => {
         })
     }
 
-    let categories = data_search.filters.find(filter => filter.id == 'category')?.values[0].path_from_root
-
-    if (!categories) {
-
-        let category_id = data_search.available_filters
-            .find(filter => filter.id == 'category').values
-            .sort((a, b) => b.results - a.results)[0].id
-
-        const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${category_id}`)
-
-        categories = data_category.path_from_root
-    }
-
-    categories = categories.map(c => c.name)
+    let categories = await findMostPopularCategoryPath(data_search)
 
     const busqueda = {
         author: {
@@ -65,7 +52,8 @@ exports.show = async (req, res) => {
     const [item, description] = await Promise.all([
         axios.get(`https://api.mercadolibre.com/items/${req.params.id}`).then(res => res.data),
         axios.get(`https://api.mercadolibre.com/items/${req.params.id}/description`).then(res => res.data)
-    ]).catch(err => console.log(err))
+    ])
+    .catch(_ =>  res.sendStatus(404))
 
     switch (item.condition) {
         case 'new':
@@ -79,12 +67,7 @@ exports.show = async (req, res) => {
             break;
     }
 
-    const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${item.category_id}`)
-
-    categories = data_category.path_from_root
-
-    categories = categories.map(c => c.name)
-
+    let categories = await findCategoryPath(item.category_id)
 
     const { id, title, currency_id, price, pictures, condition, shipping: { free_shipping }, sold_quantity } = item
 
@@ -114,3 +97,29 @@ exports.show = async (req, res) => {
     res.status(200).json(resultado)
 };
 
+
+const findMostPopularCategoryPath = async (data_search) => {
+
+    let categories = data_search.filters.find(filter => filter.id == 'category')?.values[0].path_from_root
+
+    if (!categories) {
+
+        let category_id = data_search.available_filters
+            .find(filter => filter.id == 'category').values
+            .sort((a, b) => b.results - a.results)[0].id
+
+        const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${category_id}`)
+
+        categories = data_category.path_from_root
+    }
+
+    return categories.map(c => c.name)
+}
+
+const findCategoryPath = async (category_id) => {
+    const { data: data_category } = await axios.get(`https://api.mercadolibre.com/categories/${category_id}`)
+
+    categories = data_category.path_from_root
+
+    return categories.map(c => c.name)
+}

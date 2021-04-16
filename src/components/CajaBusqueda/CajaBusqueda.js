@@ -6,7 +6,7 @@ import logo from './logo.png'
 import lupa from './lupa.svg'
 
 import { useHistory, Link } from 'react-router-dom'
-import { changeResults } from '../../store/busqueda/actions'
+import { searchResults } from '../../store/busqueda/actions'
 
 
 const CajaBusqueda = () => {
@@ -23,7 +23,7 @@ const CajaBusqueda = () => {
         const new_search = e.target.search.value
 
         if (search !== new_search) {
-            dispatch(changeResults(new_search))
+            dispatch(searchResults(new_search))
             setSearch(new_search)
         }
 

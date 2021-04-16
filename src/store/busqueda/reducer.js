@@ -10,13 +10,13 @@ const initialState = {
 const busquedaReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case "ADD_RESULTS":
-            return { ...action.payload}
-        case "COMPLETE_ITEM":
+        case "ADD_RESULTS_SEARCH":
+            return { ...action.payload }
+        case "UPDATE_ITEM":
             return {
                 ...state,
                 items: [
-                    ...state.items.map(item => item.id === action.payload.item.id ? {...item ,...action.payload.item} : item)
+                    ...state.items.map(item => item.id === action.payload.item.id ? { ...item, ...action.payload.item } : item)
                 ],
             }
         case "ADD_ITEM":
