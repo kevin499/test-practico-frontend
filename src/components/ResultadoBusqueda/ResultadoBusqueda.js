@@ -32,6 +32,7 @@ const ResultadoBusqueda = () => {
                             <Producto></Producto>
                             <Producto></Producto>
                             <Producto></Producto>
+                            <Producto></Producto>
                         </>
 
                     ) : ""
