@@ -36,7 +36,7 @@ export const searchResults = (query) => {
 
         dispatch(itemsSearchLoading(true))
 
-        return axios.get(`http://localhost:8080/api/items?q=${query}`)
+        return axios.get(`/api/items?q=${query}`)
             .then(res => res.data)
             .then(res => dispatch(addResultsSearch(res)))
             .catch(e => console.log(e))
@@ -51,7 +51,7 @@ export const searchItem = (id) => {
 
         dispatch(itemLoading(true))
 
-        return axios.get(`http://localhost:8080/api/items/${id}`)
+        return axios.get(`/api/items/${id}`)
             .then(res => res.data)
             .then(res => {
                 if (getState().busqueda.items.length > 0) {
