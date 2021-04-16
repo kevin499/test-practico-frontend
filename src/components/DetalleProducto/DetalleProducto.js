@@ -34,11 +34,7 @@ const DetalleProducto = () => {
     return (
         <section className='detalle-producto'>
             <p className="breadcrumb"> {producto?.categories?.join(" > ")} </p>
-            {
-                <div className="contenido">
-                    <p className="no-items">Parece que el producto que buscás no existe más</p>
-                </div>
-            }
+ 
             <article className="contenido wrapper">
 
                 <figure className="one">
