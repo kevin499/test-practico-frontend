@@ -29,6 +29,12 @@ export const addItem = (item) => {
     }
 }
 
+export const noItemsFound = () => {
+    return {
+        type: "NO_ITEMS_FOUND",
+    }
+}
+
 
 
 export const searchResults = (query) => {
@@ -39,7 +45,7 @@ export const searchResults = (query) => {
         return axios.get(`/api/items?q=${query}`)
             .then(res => res.data)
             .then(res => dispatch(addResultsSearch(res)))
-            .catch(e => console.log(e))
+            .catch(_ => dispatch(noItemsFound()))
             .then(_ => dispatch(itemsSearchLoading(false)))
 
     }
@@ -59,7 +65,6 @@ export const searchItem = (id) => {
                 }
                 return dispatch(addItem(res.item))
             })
-            .catch(e => console.log(e))
-            .then(_ => dispatch(itemLoading(false)))
+
     }
 }

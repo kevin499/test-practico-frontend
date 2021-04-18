@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import './DetalleProducto.scss'
 
 import { searchItem } from '../../store/busqueda/actions'
+import { itemLoading } from '../../store/ui/actions'
+
 import { seo, numberWithCommas } from '../../helpers'
 
 
@@ -17,9 +19,13 @@ const DetalleProducto = () => {
 
     const dispatch = useDispatch()
 
+    const [itemFound, setItemFound] = useState(true)
+
     useEffect(() => {
         if (!producto?.description) {
             dispatch(searchItem(id))
+                .catch(e => setItemFound(false))
+                .then(_ => dispatch(itemLoading(false)))
         }
         return () => seo()
     }, [])
@@ -34,9 +40,8 @@ const DetalleProducto = () => {
     return (
         <section className='detalle-producto'>
             <p className="breadcrumb"> {producto?.categories?.join(" > ")} </p>
- 
-            <article className="contenido wrapper">
 
+            <article className={`contenido wrapper ${!itemFound ? 'hide' : ''}`}>
                 <figure className="one">
 
                     {
@@ -67,7 +72,6 @@ const DetalleProducto = () => {
                         </span>
                     </p>
                     <button className="btn-comprar">Comprar</button>
-
                 </div>
                 <div className="three descripcion">
                     <h2>Descripción del producto</h2>
@@ -75,10 +79,11 @@ const DetalleProducto = () => {
                         {producto?.description}
                     </p>
                 </div>
-
             </article>
 
-
+            <div className={`contenido ${itemFound ? 'hide' : ''}`}>
+                <p className="no-item">No se encontró el producto que esta buscando.</p>
+            </div>
 
         </section>
     )

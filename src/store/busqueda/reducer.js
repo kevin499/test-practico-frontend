@@ -26,6 +26,11 @@ const busquedaReducer = (state = initialState, action) => {
                     action.payload.item
                 ],
             }
+        case "NO_ITEMS_FOUND":
+            return{
+                ...state,
+                items: []
+            }
         default:
             return state
     }
