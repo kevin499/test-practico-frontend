@@ -49,11 +49,16 @@ exports.index = async (req, res) => {
 
 
 exports.show = async (req, res) => {
-    const [item, description] = await Promise.all([
-        axios.get(`https://api.mercadolibre.com/items/${req.params.id}`).then(res => res.data),
-        axios.get(`https://api.mercadolibre.com/items/${req.params.id}/description`).then(res => res.data)
-    ])
-    .catch(_ =>  res.sendStatus(404))
+
+    const item = await axios.get(`https://api.mercadolibre.com/items/${req.params.id}`)
+        .then(res => res.data)
+        .catch(_ => res.sendStatus(404))
+
+
+    const description = await axios.get(`https://api.mercadolibre.com/items/${req.params.id}/description`)
+        .then(res => res.data)
+        .catch(_ => { return { plain_text: "" } })
+
 
     switch (item.condition) {
         case 'new':
