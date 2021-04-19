@@ -82,7 +82,7 @@ const DetalleProducto = () => {
             </article>
 
             <div className={`contenido ${itemFound ? 'hide' : ''}`}>
-                <p className="no-item">No se encontró el producto que esta buscando.</p>
+                <p className="no-item">No se encontró el producto que estas buscando.</p>
             </div>
 
         </section>
