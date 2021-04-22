@@ -21,6 +21,8 @@ const DetalleProducto = () => {
 
     const [itemFound, setItemFound] = useState(true)
 
+    const [price, setPrice] = useState("")
+
     useEffect(() => {
         if (!producto?.description) {
             dispatch(searchItem(id))
@@ -31,49 +33,45 @@ const DetalleProducto = () => {
     }, [])
 
     useEffect(() => {
+        const price_with_commas = numberWithCommas(producto?.price?.amount)
+
         seo({
             title: producto?.title,
-            metaDescription: `Compralo en Mercado Libre a $${numberWithCommas(producto?.price?.amount)} - ${producto?.free_shipping ? 'Envío gratis a todo el país' : ''}. Encontrá más productos de ${producto?.categories?.join(", ")}.`
-        });
+            metaDescription: `Compralo en Mercado Libre a $${price_with_commas} - ${producto?.free_shipping ? 'Envío gratis a todo el país' : ''}. Encontrá más productos de ${producto?.categories?.join(", ")}.`
+        })
+
+        setPrice(price_with_commas);
+
     }, [producto])
 
     return (
+
         <section className='detalle-producto'>
             <p className="breadcrumb"> {producto?.categories?.join(" > ")} </p>
 
             <article className={`contenido wrapper ${!itemFound ? 'hide' : ''}`}>
-                <figure className="one">
-
-                    {
-                        producto ? (
-                            <img src={producto.picture} alt="Producto" />
-                        ) : ''
-                    }
-
+                <figure>
+                    {producto && <img src={producto.picture} alt="Producto" />}
                 </figure>
-                <div className="two  contenido-derecha">
+                <div className="contenido-derecha">
                     <p>
                         {
-                            !item_loading && producto?.condition ? (
-                                <span>{producto?.condition} - {producto?.sold_quantity} vendidos</span>
-                            ) : ''
+                            (!item_loading && producto?.condition) && (<span>{producto?.condition} - {producto?.sold_quantity} vendidos</span>)
                         }
                     </p>
                     <h1 className={item_loading && !producto?.title ? 'loading' : ''}>
                         {producto?.title}
                     </h1>
                     <p className={`precio ${item_loading && !producto?.price ? 'loading' : ''}`}>
-                        {producto?.price?.currency === 'ARS' ? '$ ' : ''}
-                        <span>
-                            {numberWithCommas(producto?.price?.amount)}
-                        </span>
+                        {producto?.price?.currency === 'ARS' && '$ '}
+                        <span> {price} </span>
                         <span className="decimales">
                             {producto?.price?.decimals < 10 ? `0${producto?.price?.decimals}` : producto?.price?.decimals}
                         </span>
                     </p>
                     <button className="btn-comprar">Comprar</button>
                 </div>
-                <div className="three descripcion">
+                <div className="descripcion">
                     <h2>Descripción del producto</h2>
                     <p className={item_loading && !producto?.description ? 'loading' : ''}>
                         {producto?.description}
